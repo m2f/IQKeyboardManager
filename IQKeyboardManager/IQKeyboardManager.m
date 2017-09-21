@@ -282,7 +282,7 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
 		//If keyboard is currently showing. Sending a fake notification for keyboardWillShow to adjust view according to keyboard.
 		if (_kbShowNotification)	[self keyboardWillShow:_kbShowNotification];
 
-        [self showLog:IQLocalizedString(@"enabled", nil)];
+        [self showLog:@"Enabled"];
     }
 	//If not disable, desable it.
     else if (enable == NO &&
@@ -294,19 +294,19 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
 		//Setting NO to _enable.
 		_enable = enable;
 		
-        [self showLog:IQLocalizedString(@"disabled", nil)];
+        [self showLog:@"Disabled"];
     }
 	//If already disabled.
 	else if (enable == NO &&
              _enable == NO)
 	{
-        [self showLog:IQLocalizedString(@"already disabled", nil)];
+        [self showLog:@"Already Disabled"];
 	}
 	//If already enabled.
 	else if (enable == YES &&
              _enable == YES)
 	{
-        [self showLog:IQLocalizedString(@"already enabled", nil)];
+        [self showLog:@"Already Enabled"];
 	}
 }
 
@@ -542,14 +542,14 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
 {
     //  Getting topMost ViewController.
     UIViewController *controller = [_textFieldView topMostController];
-    if (controller == nil)  controller = [[self keyWindow] topMostController];
+    if (controller == nil)  controller = [[self keyWindow] topMostWindowController];
     
     //frame size needs to be adjusted on iOS8 due to orientation API changes.
     frame.size = controller.view.frame.size;
 
     //  If can't get rootViewController then printing warning to user.
     if (controller == nil)
-        [self showLog:(IQLocalizedString(@"You must set UIWindow.rootViewController in your AppDelegate to work with IQKeyboardManager", nil))];
+        [self showLog:@"You must set UIWindow.rootViewController in your AppDelegate to work with IQKeyboardManager"];
     
     __weak typeof(self) weakSelf = self;
     
@@ -587,7 +587,7 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
     
     //  Getting RootViewController.  (Bug ID: #1, #4)
     UIViewController *rootController = [_textFieldView topMostController];
-    if (rootController == nil)  rootController = [keyWindow topMostController];
+    if (rootController == nil)  rootController = [keyWindow topMostWindowController];
     
     //  Converting Rectangle according to window bounds.
     CGRect textFieldViewRect = [[_textFieldView superview] convertRect:_textFieldView.frame toView:keyWindow];
@@ -1084,7 +1084,7 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
 
         //  keyboard is not showing(At the beginning only). We should save rootViewRect.
         _rootViewController = [_textFieldView topMostController];
-        if (_rootViewController == nil)  _rootViewController = [[self keyWindow] topMostController];
+        if (_rootViewController == nil)  _rootViewController = [[self keyWindow] topMostWindowController];
 
         _topViewBeginRect = _rootViewController.view.frame;
         
@@ -1126,7 +1126,7 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
     
     //  Getting topMost ViewController.
     UIViewController *controller = [_textFieldView topMostController];
-    if (controller == nil)  controller = [[self keyWindow] topMostController];
+    if (controller == nil)  controller = [[self keyWindow] topMostWindowController];
 
     //If _textFieldView viewController is presented as formSheet, then adjustFrame again because iOS internally update formSheet frame on keyboardShown. (Bug ID: #37, #74, #76)
     if (_keyboardShowing == YES &&
@@ -1360,7 +1360,7 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
             _layoutGuideConstraintInitialConstant = [_layoutGuideConstraint constant];
             
             _rootViewController = [_textFieldView topMostController];
-            if (_rootViewController == nil)  _rootViewController = [[self keyWindow] topMostController];
+            if (_rootViewController == nil)  _rootViewController = [[self keyWindow] topMostWindowController];
             
             _topViewBeginRect = _rootViewController.view.frame;
             
@@ -1873,25 +1873,29 @@ NSInteger const kIQPreviousNextButtonToolbarTag     =   -1005;
 
             //In case of UITableView (Special), the next/previous buttons has to be refreshed everytime.    (Bug ID: #56)
             //	If firstTextField, then previous should not be enabled.
-            if (siblings[0] == textField)
+            if (siblings.firstObject == textField)
             {
                 if (siblings.count == 1)
                 {
-                    [textField setEnablePrevious:NO next:NO];
+                    textField.keyboardToolbar.previousBarButton.enabled = NO;
+                    textField.keyboardToolbar.nextBarButton.enabled = NO;
                 }
                 else
                 {
-                    [textField setEnablePrevious:NO next:YES];
+                    textField.keyboardToolbar.previousBarButton.enabled = NO;
+                    textField.keyboardToolbar.nextBarButton.enabled = YES;
                 }
             }
             //	If lastTextField then next should not be enaled.
             else if ([siblings lastObject] == textField)
             {
-                [textField setEnablePrevious:YES next:NO];
+                textField.keyboardToolbar.previousBarButton.enabled = YES;
+                textField.keyboardToolbar.nextBarButton.enabled = NO;
             }
             else
             {
-                [textField setEnablePrevious:YES next:YES];
+                textField.keyboardToolbar.previousBarButton.enabled = YES;
+                textField.keyboardToolbar.nextBarButton.enabled = YES;
             }
         }
     }

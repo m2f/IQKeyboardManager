@@ -219,6 +219,9 @@ public extension UIView {
             
             var items : [IQBarButtonItem] = []
             
+            //Flexible space
+            items.append(UIView.flexibleBarButtonItem())
+
             //Title button
             toolbar.titleBarButton.title = shouldHideToolbarPlaceholder == true ? nil : titleText
             
@@ -312,6 +315,9 @@ public extension UIView {
             
             var items : [IQBarButtonItem] = []
             
+            //Flexible space
+            items.append(UIView.flexibleBarButtonItem())
+
             //Title button
             toolbar.titleBarButton.title = shouldHideToolbarPlaceholder == true ? nil : titleText
 
@@ -419,6 +425,9 @@ public extension UIView {
             
             var items : [IQBarButtonItem] = []
             
+            //Flexible space
+            items.append(UIView.flexibleBarButtonItem())
+
             //Title button
             toolbar.titleBarButton.title = shouldHideToolbarPlaceholder == true ? nil : titleText
             
@@ -1304,41 +1313,6 @@ public extension UIView {
         }
         
         addPreviousNextRightOnKeyboardWithTarget(target, rightButtonTitle: rightButtonTitle, previousAction: previousAction, nextAction: nextAction, rightButtonAction: rightButtonAction, titleText: title)
-    }
-
-    
-    ///-----------------------------------
-    /// MARK: Enable/Disable Previous/Next
-    ///-----------------------------------
-    
-    /**
-    Helper function to enable and disable previous next buttons.
-    
-    @param isPreviousEnabled BOOL to enable/disable previous button on keyboard.
-    @param isNextEnabled  BOOL to enable/disable next button on keyboard..
-    */
-    public func setEnablePrevious ( _ isPreviousEnabled : Bool, isNextEnabled : Bool) {
-        
-        //  Getting inputAccessoryView.
-        if let inputAccessoryView = self.inputAccessoryView as? IQToolbar {
-            //  If it is IQToolbar and it's items are greater than zero.
-            if inputAccessoryView.items?.count > 3 {
-                if let items = inputAccessoryView.items {
-                    if let prevButton = items[0] as? IQBarButtonItem {
-                        if let nextButton = items[2] as? IQBarButtonItem {
-                            
-                            if prevButton.isEnabled != isPreviousEnabled {
-                                prevButton.isEnabled = isPreviousEnabled
-                            }
-                            
-                            if nextButton.isEnabled != isNextEnabled {
-                                nextButton.isEnabled = isNextEnabled
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
